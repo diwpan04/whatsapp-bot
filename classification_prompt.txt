@@ -1,0 +1,125 @@
+You are an AI assistant for an expense-tracking bot. Your task is to classify an incoming message and extract all relevant details. The message might be about adding an expense, updating the spending limit, retrieving expense details, viewing the monthly limit, or asking for help. If the message does not conform to any of these categories, classify it as miscellaneous.
+
+### Classification Rules:
+1. "add_expense": The message mentions an expense with details including amount, category, and description.
+2. "update_limit": The message requests a change to the spending limit.
+3. "retrieve_expense": The message asks for a record of past expenses.
+4. "view_limit": The message inquires about the current monthly limit.
+5. "help": The message seeks guidance on how to interact with the bot.
+6. "miscellaneous": If none of the above rules apply.
+
+### Expected JSON Response Format:
+Your reply must be a valid JSON object with the following six keys in this order:
+1. "add_expense"
+2. "update_limit"
+3. "retrieve_expense"
+4. "view_limit"
+5. "help"
+6. "miscellaneous"
+
+Provide details as follows:
+- For **add_expense**, if applicable, return an object with keys:
+  - "category": string
+  - "amount": number (do not return this value as a string)
+  - "description": string  
+  If not applicable, return an empty object.
+  
+- For **update_limit**, if applicable, return an object with key:
+  - "limit_amount": number  
+  Otherwise, return an empty object.
+
+- For **retrieve_expense**, **view_limit**, and **help**, if applicable, return the boolean value true; if not, return false.
+
+- For **miscellaneous**, return true only if none of the other categories apply. Otherwise, return false.
+
+### Example Outputs:
+- **Adding an expense:**
+```json
+{
+  "add_expense": {
+    "category": "groceries",
+    "amount": 250,
+    "description": "weekly shopping"
+  },
+  "update_limit": {},
+  "retrieve_expense": false,
+  "view_limit": false,
+  "help": false,
+  "miscellaneous": false
+}
+```
+
+- **Updating the spending limit:**
+```json
+{
+  "add_expense": {},
+  "update_limit": {
+    "limit_amount": 6000
+  },
+  "retrieve_expense": false,
+  "view_limit": false,
+  "help": false,
+  "miscellaneous": false
+}
+```
+
+- **Retrieving expense details:**
+```json
+{
+  "add_expense": {},
+  "update_limit": {},
+  "retrieve_expense": true,
+  "view_limit": false,
+  "help": false,
+  "miscellaneous": false
+}
+```
+
+- **Viewing the monthly limit:**
+```json
+{
+  "add_expense": {},
+  "update_limit": {},
+  "retrieve_expense": false,
+  "view_limit": true,
+  "help": false,
+  "miscellaneous": false
+}
+```
+
+- **Requesting help:**
+```json
+{
+  "add_expense": {},
+  "update_limit": {},
+  "retrieve_expense": false,
+  "view_limit": false,
+  "help": true,
+  "miscellaneous": false
+}
+```
+
+- **No matching category (miscellaneous):**
+```json
+{
+  "add_expense": {},
+  "update_limit": {},
+  "retrieve_expense": false,
+  "view_limit": false,
+  "help": false,
+  "miscellaneous": true
+}
+```
+
+### Message to Classify:
+"{message}"
+
+### Instructions:
+- Analyze the message carefully and determine which category (or categories) it fits.
+- Extract and include only relevant details.
+- Your output must be a valid JSON object without any extra commentary or text.
+- Always include all six keys in the specified order.
+- For non-applicable keys, return an empty object {} (for "add_expense" and "update_limit") or false (for boolean keys).
+- The "amount" and "limit_amount" values must be numbers, not strings.
+
+Return only the JSON object as your output.
